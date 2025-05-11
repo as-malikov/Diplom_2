@@ -38,7 +38,7 @@ public class CreateUserParamTest {
                 new Object[]{getRandomUser(), SC_OK},
                 new Object[]{getRandomUser(), SC_OK},
                 new Object[]{getRandomUser(), SC_OK},
-                new Object[]{new User(getRandomLogin(), null, null), SC_FORBIDDEN},
+                new Object[]{new User(getRandomName(), null, null), SC_FORBIDDEN},
                 new Object[]{new User(null, getRandomPassword(), null), SC_FORBIDDEN},
                 new Object[]{new User(null, null, getRandomEmail()), SC_FORBIDDEN}
         );
@@ -91,7 +91,7 @@ public class CreateUserParamTest {
             String jsonResponse = createUserResponse.extract().body().asString();
             UserCredential userCredential = gson.fromJson(jsonResponse, UserCredential.class);
 
-            ValidatableResponse deleteUserResponse = userApi.deleteUser(user, userCredential.getAccessToken());
+            ValidatableResponse deleteUserResponse = userApi.deleteUser(userCredential.getAccessToken());
             deleteUserResponse.log().all()
                     .assertThat()
                     .statusCode(SC_ACCEPTED);

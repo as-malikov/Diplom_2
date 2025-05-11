@@ -1,12 +1,14 @@
 package util;
+
 import com.github.javafaker.Faker;
+
 import java.util.Locale;
 
 import io.qameta.allure.Step;
 import model.User;
 
 public class UserGenerator {
-    public static final String LOGIN = "login_";
+    public static final String NAME = "name_";
     public static final String PASSWORD = "password_";
     public static final String EMAIL = "email_";
     public static final String UNDERLINE = "_";
@@ -15,8 +17,8 @@ public class UserGenerator {
     private static final Faker faker = new Faker(new Locale("en"));
 
     @Step("Generate random login user default")
-    public static String getRandomLogin() {
-        return LOGIN + faker.name().username();
+    public static String getRandomName() {
+        return NAME + faker.name().username();
     }
 
     @Step("Generate random password user default")
@@ -32,7 +34,7 @@ public class UserGenerator {
 
     @Step("Generate random user default")
     public static User getRandomUser() {
-        String login = LOGIN + faker.name().username();
+        String login = NAME + faker.name().username();
         String password = PASSWORD + faker.internet().password(NUMBER_OF_CHARACTERS, 12, true, true
                 , true);
         String email = EMAIL + faker.internet().emailAddress();

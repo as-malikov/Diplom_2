@@ -32,19 +32,29 @@ public class UserApi extends RestApi {
     }
 
     @Step("Get access token user by refresh token")
-    public ValidatableResponse getAccessTokenByRefreshToken(User user, String accessToken) {
-        return  given().spec(requestSpecification())
+    public ValidatableResponse getUserByToken(String accessToken) {
+        return given().spec(requestSpecification())
                 .header("Authorization", accessToken)
                 .when()
-                .post(API_AUTH_TOKEN)
+                .get(API_AUTH_USER)
+                .then();
+    }
+
+    @Step("Get access token user by refresh token")
+    public ValidatableResponse updateUserByToken(User user, String accessToken) {
+        return given().spec(requestSpecification())
+                .header("Authorization", accessToken)
+                .body(user)
+                .when()
+                .patch(API_AUTH_USER)
                 .then();
     }
 
     @Step("Delete user")
-    public ValidatableResponse deleteUser(User user, String accessToken) {
+    public ValidatableResponse deleteUser(String accessToken) {
         return given().spec(requestSpecification())
                 .header("Authorization", accessToken)
-                .body(user)
+//                .body(user)
                 .when()
                 .delete(API_AUTH_USER)
                 .then();

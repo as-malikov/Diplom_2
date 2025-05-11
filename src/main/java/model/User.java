@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class User {
-    private final  String name;
+    private final String name;
     private String password;
-    private final  String email;
+    private final String email;
 }
