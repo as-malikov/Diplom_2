@@ -40,7 +40,6 @@ public class OrderGenerate {
             String hashCode = faker.crypto().md5();
             ingredientsHashList.add(hashCode);
         }
-        System.out.println("****** " + ingredientsHashList);
         return new IngredientsHashList(ingredientsHashList);
     }
 }

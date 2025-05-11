@@ -61,26 +61,20 @@ public class CreateUserParamTest {
                     .assertThat()
                     .statusCode(expectedStatus)
                     .body("success", is(true))
-                    .and()
                     .body("user.email", is(user.getEmail()))
-                    .and()
                     .body("user.name", is(user.getName()))
-                    .and()
                     .body("accessToken", notNullValue())
-                    .and()
                     .body("refreshToken", notNullValue());
             userApi.createUser(user).log().all()
                     .assertThat()
                     .statusCode(SC_FORBIDDEN)
                     .body("success", is(false))
-                    .and()
                     .body("message", is("User already exists"));
         } else if (expectedStatus == SC_FORBIDDEN) {
             userApi.createUser(user).log().all()
                     .assertThat()
                     .statusCode(expectedStatus)
                     .body("success", is(false))
-                    .and()
                     .body("message", is("Email, password and name are required fields"));
         }
     }

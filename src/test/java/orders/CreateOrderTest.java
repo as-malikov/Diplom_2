@@ -27,25 +27,22 @@ public class CreateOrderTest {
 
     private ValidatableResponse createUserResponse;
     private UserApi userApi;
-    private User user;
     private UserCredential userCredential;
     private Gson gson;
-    private IngredientsApi ingredientsApi;
     private OrderApi orderApi;
     private Ingredients ingredients;
 
 
     @Before
     public void init() {
-        user = getRandomUser();
+        User user = getRandomUser();
         userApi = new UserApi();
-        ingredientsApi = new IngredientsApi();
+        IngredientsApi ingredientsApi = new IngredientsApi();
         gson = new Gson();
         orderApi = new OrderApi();
         createUserResponse = userApi.createUser(user);
         userCredential = getUserCredentialByResponse(createUserResponse);
         ingredients = getIngredientsResponse(ingredientsApi.getIngredients());
-        System.out.println(ingredients);
     }
 
     @Test
