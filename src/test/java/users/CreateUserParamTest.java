@@ -1,3 +1,5 @@
+package users;
+
 import api.UserApi;
 import com.google.gson.Gson;
 import io.qameta.allure.Step;

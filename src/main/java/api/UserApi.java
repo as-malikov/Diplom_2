@@ -54,7 +54,6 @@ public class UserApi extends RestApi {
     public ValidatableResponse deleteUser(String accessToken) {
         return given().spec(requestSpecification())
                 .header("Authorization", accessToken)
-//                .body(user)
                 .when()
                 .delete(API_AUTH_USER)
                 .then();

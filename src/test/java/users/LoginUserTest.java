@@ -1,3 +1,5 @@
+package users;
+
 import api.UserApi;
 import com.google.gson.Gson;
 import io.qameta.allure.Step;
@@ -5,17 +7,16 @@ import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.ValidatableResponse;
 import model.User;
 import model.UserCredential;
+import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.apache.http.HttpStatus.*;
-import static util.UserGenerator.*;
 import static org.hamcrest.Matchers.is;
+import static util.UserGenerator.getRandomUser;
 
-public class UpdateUserTest {
-
-    public static final String EMPTY_STRING = "";
+public class LoginUserTest {
     private ValidatableResponse createUserResponse;
     private UserApi userApi;
     private User user;
@@ -32,28 +33,28 @@ public class UpdateUserTest {
     }
 
     @Test
-    @DisplayName("Update user login, password and email by correct token")
-    public void updateUserByCorrectToken200OkTest() {
-        User newUser = getNewUser();
-        ValidatableResponse updateUserResponse = userApi.updateUserByToken(newUser, userCredential.getAccessToken());
-        updateUserResponse.log().all()
+    @DisplayName("Get user token")
+    public void loginUserByEmailAndPasswordReturn200OkTest() {
+        ValidatableResponse getTokenResponse = userApi.loginUser(user).log().all()
                 .assertThat()
                 .statusCode(SC_OK)
                 .body("success", is(true))
-                .body("user.email", is(newUser.getEmail()))
-                .body("user.name", is(newUser.getName()));
+                .body("user.email", is(user.getEmail()))
+                .body("user.name", is(user.getName()))
+                .body("accessToken", CoreMatchers.notNullValue())
+                .body("refreshToken", CoreMatchers.notNullValue());
+        userCredential = getUserCredentialByResponse(getTokenResponse);
     }
 
     @Test
-    @DisplayName("Update user login, password and email by empty token")
-    public void updateUserByIncorrectTokenReturn401AuthorisedTest() {
-        User newUser = getNewUser();
-        ValidatableResponse updateUserResponse = userApi.updateUserByToken(newUser, EMPTY_STRING);
-        updateUserResponse.log().all()
+    @DisplayName("Get user token with incorrect user login and user password")
+    public void loginUserByIncorrectEmailAndPasswordReturn401Unauthorized() {
+        User newUser = getRandomUser();
+        userApi.loginUser(newUser).log().all()
                 .assertThat()
                 .statusCode(SC_UNAUTHORIZED)
                 .body("success", is(false))
-                .body("message", is("You should be authorised"));
+                .body("message", is("email or password are incorrect"));
     }
 
     @After
@@ -67,15 +68,7 @@ public class UpdateUserTest {
     }
 
     @Step("Get user credential")
-    protected UserCredential getUserCredentialByResponse(ValidatableResponse response) {
+    public UserCredential getUserCredentialByResponse(ValidatableResponse response) {
         return gson.fromJson(response.extract().body().asString(), UserCredential.class);
-    }
-
-    @Step("Get new user")
-    protected User getNewUser() {
-        String newName = getRandomName();
-        String newPassword = getRandomPassword();
-        String newEmail = getRandomEmail();
-        return new User(newName, newPassword, newEmail);
     }
 }
